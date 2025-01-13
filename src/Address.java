@@ -8,8 +8,10 @@ public class Address{
     private String zipCode;
 
 
-    @Override
+    
     public String toString() {
-        return street + ", " + (apartment != null ? "Apt " + apartment + ", " : "") + city + ", " + country + " - " + zipCode;
+        return  "Street: "+ street + ", " +  "Apt " + apartment + ", "  + "City:"+ city + ", " + "Country" + country + "Zip-Code: " + zipCode;
     }
 }
+
+
