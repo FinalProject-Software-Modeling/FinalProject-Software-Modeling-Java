@@ -1,25 +1,30 @@
+package SM_Project.DigitalWallet.repositories;
 
 
 import java.util.Map;
 
-public class User {
+public class User implements UserFacade {
  
    
         public User() {
-           this.state = "active";
+           
         }
 
-        public String walletId;
+        public String idType;
+        public String idNumber;
         public String password;
         public String phone;
+        
         public Map<String, Boolean> grants;
-        public String state;
+        
         
 
         
 
-       
+        public void verifyGrants() {
+            // TODO Auto-generated method stub
             
+        }
         public String getGrants() {
             return grants.toString();
         }

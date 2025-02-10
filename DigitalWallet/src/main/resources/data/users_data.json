@@ -1,0 +1,39 @@
+[
+
+    {"idType": "CC",
+    "idNumber": "12345678",
+    "password": "password",
+    "phone": "67812",
+    "walletId": "123",
+    "firstName": "Juan",
+    "lastName": "Perez",
+    "email": "juanp@ud.co",
+    "currentAddress": "Calle 112"},
+
+    {
+        "idType": "CC",
+    "idNumber": "1245357",
+    "password": "password",
+    "phone": "241556",
+    "walletId": "124",
+    "firstName": "Maria",
+    "lastName": "Lopez",
+    "email": "mlopez@ud.co",
+    "currentAddress": "Calle 113"
+    },
+
+    {
+        "idType": "CC",
+        "idNumber": "124764594",
+        "password": "password",
+        "phone": "2458286",
+        "walletId": "125",
+        "firstName": "Pedro",
+        "lastName": "Ramirez",
+        "email": "pramirez@ud.co",
+        "currentAddress": "Calle 114"
+
+    }
+
+
+]
