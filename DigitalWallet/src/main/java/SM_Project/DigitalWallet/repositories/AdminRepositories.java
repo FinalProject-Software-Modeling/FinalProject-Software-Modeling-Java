@@ -17,8 +17,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class AdminRepositories {
-    private List<Admin> admins = new ArrayList<>();
-    private final String path = "data/admins_data.json";
+    public List<Admin> admins = new ArrayList<>();
+    public final String path = "data/admins_data.json";
+    public final String path2 = "data/users_data.json";
 
     @PostConstruct
     public void init() {
@@ -127,5 +128,84 @@ public class AdminRepositories {
 
         return newAdmin;
     }
+
+    public void createTicket(String walletId, String description) {
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream(path2)) {
+            if (is == null) {
+                throw new FileNotFoundException("File not found: " + path2);
+            }
+            String content = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+            JSONArray jsonArray = new JSONArray(content);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                if (jsonObject.getString("walletId").equals(walletId)) {
+                    jsonObject.put("ticket", description);
+                    jsonObject.put("haveTicket", "true");
+                    break;
+                }
+            }
+            try (FileWriter file = new FileWriter(getClass().getClassLoader().getResource(path2).getPath())) {
+                file.write(jsonArray.toString());
+                file.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void freezeAccount(String walletId, String status) {
+        
+        // Implement this method
+    }
+    public String showTickets(String walletId) {
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream(path2)) {
+            if (is == null) {
+                throw new FileNotFoundException("File not found: " + path2);
+            }
+            String content = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+            JSONArray jsonArray = new JSONArray(content);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                if (jsonObject.getString("walletId").equals(walletId)) {
+                    return jsonObject.getString("ticket");
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void showMovements(String walletId) {
+        // Implement this method
+        
+    }
+
+    public void reportAccount(String walletId) {
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream(path2)) {
+            if (is == null) {
+                throw new FileNotFoundException("File not found: " + path2);
+            }
+            String content = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+            JSONArray jsonArray = new JSONArray(content);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                if (jsonObject.getString("walletId").equals(walletId)) {
+                    jsonObject.put("ticket", "Reported");
+                    jsonObject.put("haveTicket", "true");
+                    break;
+                }
+            }
+            try (FileWriter file = new FileWriter(getClass().getClassLoader().getResource(path2).getPath())) {
+                file.write(jsonArray.toString());
+                file.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }     
 
 }

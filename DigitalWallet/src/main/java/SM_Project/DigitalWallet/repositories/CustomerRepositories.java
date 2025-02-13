@@ -15,12 +15,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Repository;
 
+
 @Repository
 public class CustomerRepositories {
 
-    private List<Customer> customers = new ArrayList<>();
-    private final String path = "data/users_data.json";
-
+    public List<Customer> customers = new ArrayList<>();
+    public final String path = "data/users_data.json";
     @PostConstruct
     public void init() {
         this.loadData();
@@ -100,13 +100,15 @@ public class CustomerRepositories {
         return Optional.empty();
     }
 
-    public Optional<Customer> login(Customer authData) {
+    public Boolean login(Customer authData) {
+        boolean tempBoolean = false;
         for (Customer customer : this.customers) {
             if (customer.getId().equals(authData.getId()) && customer.getPassword().equals(authData.getPassword())) {
-                return Optional.of(customer);
+                tempBoolean = true;
+                return tempBoolean;
             }
         }
-        return Optional.empty();
+        return tempBoolean;
     }
 
     public Customer register(Customer customer) {
@@ -185,5 +187,33 @@ public class CustomerRepositories {
             e.printStackTrace();
         }
         return idNumber;
+ 
+ 
     }
+
+    public void changeAddress(String idNumber, String newAddress) {
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream(path)) {
+            if (is == null) {
+                throw new FileNotFoundException("File not found: " + path);
+            }
+            String content = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+            JSONArray jsonArray = new JSONArray(content);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                if (jsonObject.getString("idNumber").equals(idNumber)) {
+                    jsonObject.put("currentAddress", newAddress);
+                    break;
+                }
+            }
+            try (FileWriter file = new FileWriter(getClass().getClassLoader().getResource(path).getPath())) {
+                file.write(jsonArray.toString());
+                file.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

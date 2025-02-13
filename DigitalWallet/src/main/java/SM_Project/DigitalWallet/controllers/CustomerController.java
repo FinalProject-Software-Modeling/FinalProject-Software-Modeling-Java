@@ -2,6 +2,7 @@
 
 package SM_Project.DigitalWallet.controllers;
 
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import SM_Project.DigitalWallet.repositories.Customer;
 import SM_Project.DigitalWallet.services.CustomerServices;
+
+import SM_Project.DigitalWallet.repositories.Admin;
+import SM_Project.DigitalWallet.repositories.AuthUserDTO;
 
 @RestController
 @RequestMapping("v1/customer")
@@ -33,7 +37,7 @@ public class CustomerController {
     } 
 
     @PostMapping("/login")
-    public Optional<Customer> login(@RequestBody Customer authData) {
+    public Boolean login(@RequestBody Customer authData) {
         return customerServices.login(authData);
 
     }
@@ -56,6 +60,17 @@ public class CustomerController {
         return customerServices.createWalletId(idNumber);
     }
     
+    /*@PostMapping("/createWalletId")
+    public String createWalletId(@RequestBody Map<String, String> request) {
+        String idNumber = request.get("idNumber");
+        return customerServices.createWalletId(idNumber);
+    } */
+    @PostMapping("/changeAddress")
+    public void changeAddress(@RequestBody Map<String, String> request) {
+        String idNumber = request.get("idNumber");
+        String newAddress = request.get("newAddress");
+        customerServices.changeAddress(idNumber, newAddress);
+    }
     
     
 

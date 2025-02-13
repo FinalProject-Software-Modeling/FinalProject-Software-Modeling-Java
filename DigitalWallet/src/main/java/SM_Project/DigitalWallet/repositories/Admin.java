@@ -49,36 +49,7 @@ public class Admin extends User{
         this.grants.put(grant, true);
     }
    
-    public void createTicket( String walletID, String description) {
-        if (grants.get("CreateTicket") == true) {
-
-                
-           
-        }
-    }
-    public void freezeAccount(String walletId, String status) {
-        if (grants.get("freezeAccount") == true) {
-            
-                
-        }
-        
-    }
-    public void showTickets(String walletId) {
-            if (grants.get("showTickets") == true) {
-                
-            }
-            
-    }
-    public void showMovements(String wallet_id) {
-        // Show movements
-        
-    }
-
-    public void reportAccount(String wallet_id) {
-        if (grants.get("reportAccount") == true) {
-                
-        }
-    }       
+    
 
     
     
