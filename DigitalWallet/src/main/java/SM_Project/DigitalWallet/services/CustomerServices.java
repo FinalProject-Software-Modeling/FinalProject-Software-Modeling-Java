@@ -30,7 +30,7 @@ public class CustomerServices {
     }
 
     public Customer register(Customer customer) {
-        if (customer.idNumber == null || customer.idType == null || customer.password == null || customer.phone == null || customer.grants == null || customer.walletId == null || customer.firstName == null || customer.lastName == null || customer.email == null) {
+        if (customer.idNumber == null || customer.idType == null || customer.password == null || customer.phone == null  || customer.walletId == null || customer.firstName == null || customer.lastName == null || customer.email == null || customer.currentAddress == null || customer.haveTicket == null || customer.ticket == null) {
             return null;
         }else {
             return customerRepositories.register(customer);
@@ -38,5 +38,13 @@ public class CustomerServices {
 
          
     }
+    public String getWalletId(String idNumber) {
+        return customerRepositories.getWalletId(idNumber);
+    }
+    public String createWalletId(String idNumber) {
+        return customerRepositories.createWalletId(idNumber);
+    }
+    
+    
     
 }

@@ -1,0 +1,29 @@
+[
+    {
+        "idType": "CC",
+        "idNumber": "1",
+        "password": "password123",
+        "phone": "+1234567890",
+        "firstName": "Carlos",
+        "lastName": "Gomez",
+        "email": "carlos.gomez@example.com"
+    },
+    {
+        "idType": "CC",
+        "idNumber": "2",
+        "password": "securePass456",
+        "phone": "+0987654321",
+        "firstName": "Maria",
+        "lastName": "Lopez",
+        "email": "maria.lopez@example.com"
+    },
+    {
+        "idType": "CC",
+        "idNumber": "3",
+        "password": "myPassword789",
+        "phone": "+1122334455",
+        "firstName": "Juan",
+        "lastName": "Martinez",
+        "email": "juan.martinez@example.com"
+    }
+]

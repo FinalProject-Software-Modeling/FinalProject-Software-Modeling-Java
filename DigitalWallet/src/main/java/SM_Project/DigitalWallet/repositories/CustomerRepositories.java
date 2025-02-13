@@ -1,53 +1,41 @@
 package SM_Project.DigitalWallet.repositories;
-import org.springframework.stereotype.Repository;
-
-
 
 import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+
 import javax.annotation.PostConstruct;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import SM_Project.DigitalWallet.repositories.AuthUserDTO;
-import SM_Project.DigitalWallet.repositories.Customer;
-
-
-
-
-
-
-
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class CustomerRepositories {
-    
-    private List <Customer> customers = new ArrayList<Customer>();
 
+    private List<Customer> customers = new ArrayList<>();
+    private final String path = "data/users_data.json";
 
     @PostConstruct
-    public void init(){
+    public void init() {
         this.loadData();
-
     }
-    private void loadData(){
-       String path = "data/users.json";
-       try(InputStream is = getClass().getClassLoader().getResourceAsStream(path)){
-          if (is == null) {
-              throw new FileNotFoundException("File not found " + path);
-          }
-          String content = new String(is.readAllBytes(), StandardCharsets.UTF_8);
-          JSONArray jsonArray = new JSONArray(content);
+
+    private void loadData() {
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream(path)) {
+            if (is == null) {
+                throw new FileNotFoundException("File not found " + path);
+            }
+            String content = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+            JSONArray jsonArray = new JSONArray(content);
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                
-                
+
                 Customer customer = new Customer(
                     jsonObject.getString("idType"),
                     jsonObject.getString("idNumber"),
@@ -57,50 +45,80 @@ public class CustomerRepositories {
                     jsonObject.getString("firstName"),
                     jsonObject.getString("lastName"),
                     jsonObject.getString("email"),
-                    jsonObject.getString("currentAddress")
-        
+                    jsonObject.getString("currentAddress"),
+                    jsonObject.getString("haveTicket"),
+                    jsonObject.getString("ticket")
                 );
                 customers.add(customer);
-
-                
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    private void saveData() {
+        JSONArray jsonArray = new JSONArray();
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream(path)) {
+            if (is != null) {
+                String content = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+                jsonArray = new JSONArray(content);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
+        for (Customer customer : customers) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("idType", customer.idType);
+            jsonObject.put("idNumber", customer.idNumber);
+            jsonObject.put("password", customer.password);
+            jsonObject.put("phone", customer.phone);
+            jsonObject.put("walletId", customer.walletId);
+            jsonObject.put("firstName", customer.firstName);
+            jsonObject.put("lastName", customer.lastName);
+            jsonObject.put("email", customer.email);
+            jsonObject.put("currentAddress", customer.currentAddress);
+            jsonObject.put("haveTicket", customer.haveTicket);
+            jsonObject.put("ticket", customer.ticket);
+            jsonArray.put(jsonObject);
+        }
+
+        try (FileWriter file = new FileWriter(getClass().getClassLoader().getResource(path).getPath())) {
+            file.write(jsonArray.toString());
+            file.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public Optional<Customer> getById(String customerId) {
         for (Customer customer : this.customers) {
-            if (customer.idNumber.equals(customerId)) {
+            if (customer.getId().equals(customerId)) {
                 return Optional.of(customer);
             }
         }
         return Optional.empty();
     }
+
     public Optional<Customer> login(Customer authData) {
         for (Customer customer : this.customers) {
-            if (customer.idNumber.equals(authData.getId()) && customer.password.equals(authData.getPassword())) {
+            if (customer.getId().equals(authData.getId()) && customer.getPassword().equals(authData.getPassword())) {
                 return Optional.of(customer);
             }
         }
         return Optional.empty();
     }
 
-
-
-
     public Customer register(Customer customer) {
-        int lastId =  - 1;
+        int lastId = -1;
         for (Customer existingCustomer : this.customers) {
-            if (Integer.parseInt(existingCustomer.idNumber) > lastId) {
-                lastId = Integer.parseInt(existingCustomer.idNumber);
+            if (Integer.parseInt(existingCustomer.getId()) > lastId) {
+                lastId = Integer.parseInt(existingCustomer.getId());
             }
         }
-        lastId+=1;
+        lastId += 1;
 
-        Customer newCustomer= new Customer(
+        Customer newCustomer = new Customer(
             customer.idType,
             String.valueOf(lastId),
             customer.password,
@@ -109,14 +127,63 @@ public class CustomerRepositories {
             customer.firstName,
             customer.lastName,
             customer.email,
-            customer.currentAddress
+            customer.currentAddress,
+            customer.haveTicket,
+            customer.ticket
         );
-        
+
         this.customers.add(newCustomer);
+        this.saveData();
 
         return newCustomer;
     }
+
+    public String getWalletId(String idNumber) {
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream(path)) {
+            if (is == null) {
+                throw new FileNotFoundException("File not found: " + path);
+            }
+            String content = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+            JSONArray jsonArray = new JSONArray(content);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                if (jsonObject.getString("idNumber").equals(idNumber)) {
+                    return jsonObject.getString("walletId");
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String createWalletId(String idNumber) {
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream(path)) {
+            if (is == null) {
+                throw new FileNotFoundException("File not found: " + path);
+            }
+            String content = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+            JSONArray jsonArray = new JSONArray(content);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                if (jsonObject.getString("idNumber").equals(idNumber)) {
+                    if (jsonObject.getString("walletId").isEmpty()) {
+                        jsonObject.put("walletId", idNumber);
+                    } else {
+                        return "The user already has a wallet";
+                    }
+                    break;
+                }
+            }
+            try (FileWriter file = new FileWriter(getClass().getClassLoader().getResource(path).getPath())) {
+                file.write(jsonArray.toString());
+                file.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return idNumber;
+    }
 }
-
-
-    
