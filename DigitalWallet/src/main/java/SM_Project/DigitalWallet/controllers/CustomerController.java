@@ -20,6 +20,12 @@ import SM_Project.DigitalWallet.services.CustomerServices;
 public class CustomerController {
     @Autowired
     private CustomerServices customerServices;
+    
+    
+    @GetMapping("/prueba")
+    public String prueba() {
+        return "Hola";
+    }
 
     @GetMapping("/getById/{IdCustomer}")
     public  Optional <Customer> getById(@PathVariable("IdCustomer") String customerId) {
@@ -40,8 +46,15 @@ public class CustomerController {
     }
 
 
-
-   
+    @GetMapping("/getWalletId/{idNumber}")
+    public String getWalletId(@PathVariable String idNumber) {
+        return customerServices.getWalletId(idNumber);
+    }
+    
+    @PostMapping("/createWalletId")
+    public String createWalletId(@RequestBody String idNumber) {
+        return customerServices.createWalletId(idNumber);
+    }
     
     
     
