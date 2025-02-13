@@ -1,5 +1,6 @@
 /**This file has the definition of the Admin endpoints int the application **/
 package SM_Project.DigitalWallet.controllers;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,21 @@ public class AdminController {
     public Admin register(@RequestBody Admin admin) {
         return adminServices.register(admin);
     }
+     @PostMapping("/createTicket")
+    public void createTicket(@RequestBody Map<String, String> request) {
+        String walletId = request.get("walletId");
+        String description = request.get("description");
+        adminServices.createTicket(walletId, description);
+    }
 
+    @GetMapping("/showTickets/{walletId}")
+    public String showTickets(@PathVariable String walletId) {
+        return adminServices.showTickets(walletId);
+    }
+    @PostMapping("/reportAccount")
+    public void reportAccount(@RequestBody Map<String, String> request) {
+        String walletId = request.get("walletId");
+        adminServices.reportAccount(walletId);
+    }
     
 }

@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 
 import SM_Project.DigitalWallet.repositories.Admin;
 import SM_Project.DigitalWallet.repositories.AdminRepositories;
+import SM_Project.DigitalWallet.repositories.Admin;
+import SM_Project.DigitalWallet.repositories.Customer;
+import SM_Project.DigitalWallet.repositories.AuthUserDTO;
 
 @Service
 public class AdminServices {
@@ -37,5 +40,18 @@ public class AdminServices {
         }
 
          
+    }
+
+
+    public void createTicket(String walletId, String description) {
+        adminRepositories.createTicket(walletId, description);
+    }
+
+    public String showTickets(String walletId) {
+        return adminRepositories.showTickets(walletId);
+    }
+    
+    public void reportAccount(String walletId) {
+        adminRepositories.reportAccount(walletId);
     }
 }

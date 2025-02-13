@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 
 import SM_Project.DigitalWallet.repositories.Customer;
 import SM_Project.DigitalWallet.repositories.CustomerRepositories;
+import SM_Project.DigitalWallet.repositories.Admin;
+import SM_Project.DigitalWallet.repositories.Customer;
+import SM_Project.DigitalWallet.repositories.AuthUserDTO;
 
 @Service
 public class CustomerServices {
@@ -20,9 +23,9 @@ public class CustomerServices {
         return customerRepositories.getById(customerId);
     }
 
-    public Optional<Customer> login(Customer authData) {
+    public boolean  login(Customer authData) {
         if (authData.getId() == null || authData.getPassword() == null) {
-            return Optional.empty();
+            return customerRepositories.login(authData);
         
         }else {
             return customerRepositories.login(authData);
@@ -45,6 +48,8 @@ public class CustomerServices {
         return customerRepositories.createWalletId(idNumber);
     }
     
-    
+    public void changeAddress(String idNumber, String newAddress) {
+        customerRepositories.changeAddress(idNumber, newAddress);
+    }
     
 }

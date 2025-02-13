@@ -19,7 +19,7 @@ public class Customer extends User{
     public String currentAddress;
     public String haveTicket;
     public String ticket;
-    public String path = "data/users_data.json";
+    
     public Customer(String idType, String idNumber, String password, String phone, String walletId, String firstName, String lastName, String email, String currentAddress, String haveTicket, String ticket) {
         
         this.idType = idType;
@@ -82,30 +82,7 @@ public class Customer extends User{
     }
     
 
-    public void changeAddress(String idNumber, String newAddress) {
-        try (InputStream is = getClass().getClassLoader().getResourceAsStream(path)) {
-            if (is == null) {
-                throw new FileNotFoundException("File not found: " + path);
-            }
-            String content = new String(is.readAllBytes(), StandardCharsets.UTF_8);
-            JSONArray jsonArray = new JSONArray(content);
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                if (jsonObject.getString("idNumber").equals(idNumber)) {
-                    jsonObject.put("currentAddress", newAddress);
-                    break;
-                }
-            }
-            try (FileWriter file = new FileWriter(getClass().getClassLoader().getResource(path).getPath())) {
-                file.write(jsonArray.toString());
-                file.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    
 
     
 }
