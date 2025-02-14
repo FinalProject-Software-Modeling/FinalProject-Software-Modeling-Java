@@ -34,8 +34,6 @@ public class AdminController {
 
     }
 
-   
-
     @PostMapping("/register")
     public Admin register(@RequestBody Admin admin) {
         return adminServices.register(admin);
@@ -56,5 +54,7 @@ public class AdminController {
         String walletId = request.get("walletId");
         adminServices.reportAccount(walletId);
     }
+
+    
     
 }
